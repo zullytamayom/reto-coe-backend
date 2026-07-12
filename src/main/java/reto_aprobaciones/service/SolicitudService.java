@@ -6,10 +6,12 @@ import reto_aprobaciones.dto.request.SolicitudRequest;
 import reto_aprobaciones.dto.response.SolicitudResponse;
 import reto_aprobaciones.exception.SolicitudNotFoundException;
 import reto_aprobaciones.exception.TransicionEstadoInvalidaException;
+import reto_aprobaciones.model.EventoOutbox;
 import reto_aprobaciones.model.HistoricoEstado;
 import reto_aprobaciones.model.Solicitud;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reto_aprobaciones.repository.EventoOutboxRepository;
 import reto_aprobaciones.repository.HistoricoEstadoRepository;
 import reto_aprobaciones.repository.SolicitudRepository;
 
@@ -23,6 +25,7 @@ public class SolicitudService {
 
     private final SolicitudRepository solicitudRepository;
     private final HistoricoEstadoRepository historicoEstadoRepository;
+    private final EventoOutboxRepository eventoOutboxRepository;
 
     public SolicitudResponse crearSolicitud(SolicitudRequest request) {
         Solicitud solicitud = new Solicitud();
@@ -98,6 +101,14 @@ public class SolicitudService {
         historico.setUsuarioAccion(usuario);
         historico.setComentarios(comentarios);
         historicoEstadoRepository.save(historico);
+
+        EventoOutbox outbox = new EventoOutbox();
+        outbox.setAgregado("solicitud." + estado.toLowerCase());
+        outbox.setContenido(String.format(
+                "{\"id\": %d, \"estado\": \"%s\", \"usuario\": \"%s\", \"titulo\": \"%s\"}",
+                solicitud.getId(), estado, usuario, solicitud.getTitulo()
+        ));
+        eventoOutboxRepository.save(outbox);
     }
 
     private SolicitudResponse mapToResponse(Solicitud solicitud) {
