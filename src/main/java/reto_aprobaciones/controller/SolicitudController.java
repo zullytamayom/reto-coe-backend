@@ -12,7 +12,7 @@ import reto_aprobaciones.service.SolicitudService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/solicitudes")
+@RequestMapping("/solicitudes")
 @RequiredArgsConstructor
 public class SolicitudController {
 
