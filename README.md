@@ -1,4 +1,4 @@
-# 🏛️ CoE Banco TEST - Backend Transaccional de Autorizaciones
+# Banco TEST - Backend Transaccional de Autorizaciones
 
 Este repositorio contiene el microservicio principal y transaccional encargado de gestionar el ciclo de vida de las solicitudes de autorización interna del banco. Diseñado bajo una **Arquitectura Limpia** y aplicando el patrón de diseño táctico **Transactional Outbox** para garantizar consistencia eventual robusta tolerante a fallos de red.
 
