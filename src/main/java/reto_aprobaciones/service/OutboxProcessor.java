@@ -48,10 +48,10 @@ public class OutboxProcessor {
                 evento.setEstado("PROCESADO");
                 outboxRepository.save(evento);
 
-                log.info("✅ Evento [{}] enviado a AWS SNS y marcado como PROCESADO con éxito.", evento.getAgregado());
+                log.info("Evento [{}] enviado a AWS SNS y marcado como PROCESADO con éxito.", evento.getAgregado());
 
             } catch (Exception e) {
-                log.error("❌ Fallo crítico al enviar el evento [{}] a AWS: {}", evento.getAgregado(), e.getMessage());
+                log.error("Fallo crítico al enviar el evento [{}] a AWS: {}", evento.getAgregado(), e.getMessage());
                 evento.setEstado("ERROR");
                 outboxRepository.save(evento);
             }

@@ -17,6 +17,7 @@ import java.util.List;
 public class SolicitudController {
 
     private final SolicitudService solicitudService;
+
     @PostMapping
     public ResponseEntity<SolicitudResponse> crearSolicitud(@RequestBody SolicitudRequest request) {
         SolicitudResponse response = solicitudService.crearSolicitud(request);
