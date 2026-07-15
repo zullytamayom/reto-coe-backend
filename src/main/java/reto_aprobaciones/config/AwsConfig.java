@@ -7,6 +7,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sns.SnsClient;
+import software.amazon.awssdk.services.sns.SnsClientBuilder;
 
 import java.net.URI;
 
@@ -19,15 +20,19 @@ public class AwsConfig {
     @Value("${reto.aws.secret-key}")
     private String secretKey;
 
+    @Value("${reto.aws.is-local:true}")
+    private boolean isLocal;
+
     @Bean
     public SnsClient snsClient() {
-        return SnsClient.builder()
-                // Apunta directamente al puerto de LocalStack en Docker
-                .endpointOverride(URI.create("http://127.0.0.1:4566"))
-                .region(Region.US_EAST_1)
-                .credentialsProvider(StaticCredentialsProvider.create(
+        SnsClientBuilder builder = SnsClient.builder()
+                .region(Region.US_EAST_1);
+        if(isLocal){
+            builder.endpointOverride(URI.create("http://127.0.0.1:4566"))
+                    .credentialsProvider(StaticCredentialsProvider.create(
                         AwsBasicCredentials.create(accessKey, secretKey)
-                ))
-                .build();
+                ));
+        }
+        return builder.build();
     }
 }
